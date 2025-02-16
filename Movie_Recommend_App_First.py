@@ -42,38 +42,6 @@ def Movie_Recommender(movie):
 
     return list(zip(titles, overviews))
 
-# Recommendation Sessions
-if "recommendations" not in st.session_state:
-    st.session_state.recommendations = []
-# Index Sessions
-if "index" not in st.session_state:
-    st.session_state.index = 0
-
-# Next & Previous Function
-def show_recommendations():
-    if not st.session_state.recommendations:
-        return
-
-    ind = st.session_state.index
-    recommendations = st.session_state.recommendations
-
-    with recommend_box.container():
-        st.title("Similar Recommendations:")
-        st.subheader(f"{ind+1}. {recommendations[ind][0]}")
-        st.write(recommendations[ind][1])
-
-        prev,nxt,b = st.columns([0.6,0.6,2])
-        # Previous Button
-        if prev.button("Previous", key=f"prev_{ind}"):
-            if st.session_state.index > 0:
-                st.session_state.index -= 1
-                show_recommendations()
-        # Next Button
-        if nxt.button("Next", key=f"next_{ind}"):
-            if st.session_state.index < len(recommendations) - 1:
-                st.session_state.index += 1
-                show_recommendations()
-
 # Page UI
 st.title("Movie Recommendation System")
 
@@ -85,9 +53,9 @@ if btn:
     if recommendations is None:
         st.error("Select a Movie!")
     else:
-        st.session_state.recommendations = recommendations
-        st.session_state.index = 0
-
-# Function Call
-recommend_box = st.empty()
-show_recommendations()
+        st.title("Similar Recommendations:")
+        c = 1
+        for title,overview in recommendations:
+            st.subheader(f"{c}. {title}")
+            st.write(overview)
+            c+=1
